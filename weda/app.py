@@ -14,7 +14,7 @@ from sqlalchemy import create_engine, func
 # Create an instance of our Flask app.
 app = Flask(__name__)
 
-rds_connection_string = "economy_development_db.sqlite"
+rds_connection_string = "weda/economy_development_db.sqlite"
 engine = create_engine(f'sqlite:///{rds_connection_string}')
 
 Base = automap_base()
