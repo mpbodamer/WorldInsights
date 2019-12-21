@@ -1,1 +1,1 @@
-web: gunicorn weda.app:app
+web: gunicorn world-insights.app:app
