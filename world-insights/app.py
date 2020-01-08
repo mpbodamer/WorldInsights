@@ -8,6 +8,38 @@ from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
 from sqlalchemy import create_engine, func
 
+non_country_list = ["World", "High income","Latin America & Caribbean (excluding high income)", 
+                    "OECD members", "Post-demographic dividend", "IDA total", "North America",
+                    "Europe & Central Asia", "European Union", "East Asia & Pacific", "Euro area",
+                    "IDA & IBRD total", "Low & middle income", "Middle income", "IBRD only",
+                    "Upper middle income", "Late-demographic dividend", "Early-demographic dividend",
+                    "Latin America & Caribbean", "Latin America & the Caribbean (IDA & IBRD countries)",
+                    "East Asia & Pacific (excluding high income)", "East Asia & Pacific (IDA & IBRD countries)",
+                    "Lower middle income", "Middle East & North Africa", 
+                    "Europe & Central Asia (IDA & IBRD countries)", "Arab World",
+                    "Europe & Central Asia (excluding high income)", "South Asia", "South Asia (IDA & IBRD)",
+                    "Middle East & North Africa (excluding high income)", 
+                    "Middle East & North Africa (IDA & IBRD countries)", "Central Europe and the Baltics",
+                    "Sub-Saharan Africa (IDA & IBRD countries)", "Sub-Saharan Africa",
+                    "Sub-Saharan Africa (excluding high income)", "IDA only", "Pre-demographic dividend",
+                    "Fragile and conflict affected situations", "Least developed countries: UN classification",
+                    "IDA blend", "Heavily indebted poor countries (HIPC)", "Low income", "Small states",
+                    "Other small states", "Caribbean small states", "Pacific island small states"]
+
+
+def getYearlyData(year, metric):
+    data = pd.read_sql_query(f'SELECT * FROM economy_development WHERE year={year} AND indicator_code = "{metric}"', con=engine)
+    data = data.drop(['indicator_name','indicator_code','year'], axis=1)
+    data = data.dropna()
+    
+    data = data[~data['country_name'].isin(non_country_list)]
+    data = data.set_index('country_name')
+    
+    dataJSON= data.to_json()
+
+    return dataJSON
+
+
 # Create an instance of our Flask app.
 app = Flask(__name__)
 
@@ -99,7 +131,7 @@ def getDataForYear(indicator_code=None, year=None):
 # @app.route('/api/getDataForYear?indicator_name=<indicator_name>&year=<year>')
 ## adding call that fetches all data
 @app.route('/api/getAll', methods=['GET'])
-def getDataForYear(indicator_code=None, year=None):
+def getDataForYear1(indicator_code=None, year=None):
     args = request.args
     print (args)# For debugging
     indicator_code = args['indicator_code']
@@ -157,6 +189,16 @@ def getCountryNames(indicator_code=None):
 
     result_df = pd.read_sql_query(sql_query, engine)
     return jsonify(list(result_df['country_name']))
+    
+    
+@app.route("/getGdpMaps")
+def getGdpMaps():
+    return render_template("worldGdpMaps.html")
+
+@app.route('/api/getGdpMap')
+def getYearlyGdpData(indicator_code=None):
+    
+    return getYearlyData(1980,"NY.GDP.MKTP.CD")
     
 if __name__ == "__main__":
     app.run(debug=True)
