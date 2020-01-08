@@ -141,7 +141,7 @@ def getDataForYear1(indicator_code=None, year=None):
     print(indicator_code)
     print(year)
     
-    sql_query = "SELECT country_name, country_code, indicator_name, indicator_code, year, value   FROM economy_development"
+    sql_query = f"SELECT country_name, country_code, indicator_name, indicator_code, year, value   FROM economy_development"
     print(sql_query)
     results = engine.execute(sql_query).fetchall()
 
