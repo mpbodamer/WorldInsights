@@ -46,7 +46,8 @@ app = Flask(__name__)
 #################################################
 # Database Setup
 #################################################
-rds_connection_string = "world-insights/db/economy_development_db.sqlite"
+# rds_connection_string = "world-insights/db/economy_development_db.sqlite"
+rds_connection_string = "db/economy_development_db.sqlite"
 engine = create_engine(f'sqlite:///{rds_connection_string}')
 
 # reflect an existing database into a new model
