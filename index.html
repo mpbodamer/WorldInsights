@@ -32,7 +32,10 @@ var colorScale = d3.scaleThreshold()
 // Load external data and boot
 d3.queue()
   .defer(d3.json, "https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson")
-  .defer(d3.csv, "result.csv", function(d){ data.set(d.country_code, +d.value); })
+  .defer(d3.csv, "result.csv", function(d){
+    console.log(d);
+    data.set(d.country_code, +d.value);
+    console.log(data) })
   .await(ready);
 
 function ready(error, topo) {

@@ -35,9 +35,9 @@ def getYearlyData(year, metric):
     data = data[~data['country_name'].isin(non_country_list)]
     data = data.set_index('country_name')
     
-    dataJSON= data.to_json()
+    dataCSV= data.to_csv()
 
-    return dataJSON
+    return dataCSV
 
 
 # Create an instance of our Flask app.
@@ -190,15 +190,15 @@ def getCountryNames(indicator_code=None):
     result_df = pd.read_sql_query(sql_query, engine)
     return jsonify(list(result_df['country_name']))
     
-    
+
 @app.route("/getGdpMaps")
 def getGdpMaps():
     return render_template("worldGdpMaps.html")
 
-@app.route('/api/getGdpMap')
-def getYearlyGdpData(indicator_code=None):
+@app.route('/api/getGdpMap/<year>')
+def getYearlyGdpData(year, indicator_code=None):
     
-    return getYearlyData(1980,"NY.GDP.MKTP.CD")
+    return getYearlyData(year,"NY.GDP.MKTP.CD")
     
 if __name__ == "__main__":
     app.run(debug=True)
