@@ -195,6 +195,14 @@ def getCountryNames(indicator_code=None):
 def getGdpMaps():
     return render_template("worldGdpMaps.html")
 
+@app.route("/api/getYearList")
+def getYearList(indicator_code=None):
+    
+    sql_query = f"SELECT DISTINCT(year) FROM economy_development where indicator_code= 'NY.GDP.MKTP.CD' ORDER by year"
+
+    result_df = pd.read_sql_query(sql_query, engine)
+    return jsonify(list(result_df['year']))
+    
 @app.route('/api/getGdpMap/<year>')
 def getYearlyGdpData(year, indicator_code=None):
     

@@ -79,3 +79,26 @@ function world_map_generator(year){
     }
 
 }
+
+
+function init() {
+    // Grab a reference to the dropdown select element
+    var selector = d3.select("#yearData");
+  
+    // Use the list of sample names to populate the select options
+    d3.json("/api/getYearList", function(sampleNames) {
+      console.log(sampleNames);
+
+      sampleNames.forEach((sample) => {
+        selector
+          .append("option")
+          .text(sample)
+          .property("value", sample);
+
+      });
+
+      const yearName = sampleNames[0];
+  
+    });
+  }
+init();
