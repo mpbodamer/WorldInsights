@@ -15,6 +15,14 @@
 	    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 	    <link rel="stylesheet" href="static/css/style.css">
 
+	    <script src="https://d3js.org/d3.v4.js"></script>
+		<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+		<script src="https://d3js.org/d3-geo-projection.v2.min.js"></script>
+
+	    <script
+  			src="https://code.jquery.com/jquery-3.3.1.js"
+  			integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+  			crossorigin="anonymous"></script>
 	    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 	  
 
@@ -83,9 +91,11 @@
 			<br>
 			<div class="row">
 				<div class="control-row">
-					Country: <select class="countrydata" id="countrydata" onchange="optionChanged(this.value)"></select>
+					Year: <select class="yearData" id="yearData"></select>
 				</div>
   			</div>
+  			<br>`
+  			<svg id="worldMap" width="800" height="600"  onload="world_map_generator(2000)"></svg>
   		</div>
   		<!--
 			<br>
@@ -112,7 +122,6 @@
   </div>
 </div>
  -->
-<script src="{{ url_for('static', filename='js/d3.min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/plotly-latest.min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/worldMaps.js') }}"></script>
 </body>

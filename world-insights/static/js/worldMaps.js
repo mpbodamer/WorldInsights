@@ -22,7 +22,7 @@ function world_map_generator(year){
   // Load external data and boot
   d3.queue()
     .defer(d3.json, "https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson")
-    .defer(d3.csv, "/api/getGdpMap", function(d){ 
+    .defer(d3.csv, `/api/getGdpMap/${year}`, function(d){ 
       console.log(d);
       data.set(d.country_code, +d.value);
             console.log(data);
