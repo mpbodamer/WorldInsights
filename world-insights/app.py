@@ -204,10 +204,23 @@ def getYearList(indicator_code=None):
     result_df = pd.read_sql_query(sql_query, engine)
     return jsonify(list(result_df['year']))
     
+@app.route("/api/getYearListUnemployment")
+def getYearListUnemployment(indicator_code=None):
+    
+    sql_query = f"SELECT DISTINCT(year) FROM economy_development where indicator_code= 'SL.UEM.TOTL.ZS' ORDER by year"
+
+    result_df = pd.read_sql_query(sql_query, engine)
+    return jsonify(list(result_df['year']))
+
 @app.route('/api/getGdpMap/<year>')
 def getYearlyGdpData(year, indicator_code=None):
     
     return getYearlyData(year,"NY.GDP.MKTP.CD")
+
+@app.route('/api/getWorldUnemployemnt/<year>')
+def getYearlyGdpGrowth(year, indicator_code=None):
+    
+    return getYearlyData(year,"SL.UEM.TOTL.ZS")
     
 if __name__ == "__main__":
     app.run(debug=True)

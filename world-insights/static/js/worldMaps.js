@@ -1,7 +1,7 @@
 function world_map_generator(year){
   console.log("Loaded "+year)
   // The svg
-  var svg = d3.select("svg"),
+  var svg = d3.select("#WorldGdp"),
     width = +svg.attr("width"),
     height = +svg.attr("height");
 
@@ -23,6 +23,88 @@ function world_map_generator(year){
   d3.queue()
     .defer(d3.json, "https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson")
     .defer(d3.csv, `/api/getGdpMap/${year}`, function(d){ 
+      console.log(d);
+      data.set(d.country_code, +d.value);
+            // console.log(data);
+
+       })
+    .await(ready);
+
+ function ready(error, topo) {
+
+  let mouseOver = function(d) {
+    console.log("mouse over")
+    d3.selectAll(".Country")
+      .transition()
+      .duration(200)
+      .style("opacity", .5)
+    d3.select(this)
+      .transition()
+      .duration(200)
+      .style("opacity", 1)
+      .style("stroke", "black")
+  }
+
+  let mouseLeave = function(d) {
+    d3.selectAll(".Country")
+      .transition()
+      .duration(200)
+      .style("opacity", .8)
+    d3.select(this)
+      .transition()
+      .duration(200)
+      .style("stroke", "transparent")
+  }
+
+  // Draw the map
+ svg.append("g")
+    .selectAll("path")
+    .data(topo.features)
+    .enter()
+    .append("path")
+      // draw each country
+      .attr("d", d3.geoPath()
+        .projection(projection)
+      )
+      // set the color of each country
+      .attr("fill", function (d) {
+        d.total = data.get(d.id) || 0;
+        return colorScale(d.total);
+      })
+      .style("stroke", "transparent")
+      .attr("class", function(d){ return "Country" } )
+      .style("opacity", .8)
+      .on("mouseover", mouseOver )
+      .on("mouseleave", mouseLeave )
+    }
+
+}
+
+function world_map_generator_unemployement(year){
+  console.log("Loaded world unemployment "+year)
+  // The svg
+  var svg = d3.select("#WorldUnemployment"),
+    width = +svg.attr("width"),
+    height = +svg.attr("height");
+
+  // Map and projection
+  var path = d3.geoPath();
+  var projection = d3.geoMercator()
+    .scale(100)
+    .center([0,20])
+    .translate([width / 2, height / 2]);
+
+  // Data and color scale
+  var data = d3.map();
+  var colorScale = d3.scaleThreshold()
+    .domain([0, 2, 4, 6, 8, 10, 12, 14])
+    .range(d3.schemeReds[9]);
+
+
+  // Load external data and boot
+  d3.queue()
+    .defer(d3.json, "https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson")
+    .defer(d3.csv, `/api/getWorldUnemployemnt/${year}`, function(d){ 
       console.log(d);
       data.set(d.country_code, +d.value);
             console.log(data);
@@ -80,10 +162,9 @@ function world_map_generator(year){
 
 }
 
-
 function init() {
     // Grab a reference to the dropdown select element
-    var selector = d3.select("#yearData");
+    var selector = d3.selectAll("#yearData");
   
     // Use the list of sample names to populate the select options
     d3.json("/api/getYearList", function(sampleNames) {
@@ -91,6 +172,23 @@ function init() {
 
       sampleNames.forEach((sample) => {
         selector
+          .append("option")
+          .text(sample)
+          .property("value", sample);
+
+      });
+
+      const yearName = sampleNames[0];
+  
+    });
+
+    var selector2 = d3.selectAll("#yearDataUnemployed")
+
+    d3.json("/api/getYearListUnemployment", function(sampleNames) {
+      console.log(sampleNames);
+
+      sampleNames.forEach((sample) => {
+        selector2
           .append("option")
           .text(sample)
           .property("value", sample);

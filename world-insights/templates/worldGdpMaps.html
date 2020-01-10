@@ -83,8 +83,15 @@
 					Year: <select class="yearData" id="yearData" onchange="world_map_generator(this.value)"></select>
 				</div>
   			</div>
-  			<br>`
-  			<svg id="worldMap" width="800" height="600"  onload="world_map_generator(1960)"></svg>
+  			<h3>World GDP (2018 US Dollars)</h3>
+  			<br>
+  			<svg id="WorldGdp" width="800" height="600"  onload="world_map_generator(1960)"></svg>
+  			<h3></h3>
+  			<br>
+  			Year: <select class="yearDataUnemployed" id="yearDataUnemployed" onchange="world_map_generator_unemployement(this.value)"></select>
+  			<br>
+  			<h3>World Unemployement (0% - 14%+)</h3>
+  			<svg id="WorldUnemployment" width="800" height="600"  onload="world_map_generator_unemployement(1991)"></svg>
   		</div>
   		<!--
 			<br>
